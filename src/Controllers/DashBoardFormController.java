@@ -1,5 +1,8 @@
 package Controllers;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -17,9 +21,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
 
 public class DashBoardFormController {
     public AnchorPane DashBoardContext;
@@ -27,6 +35,9 @@ public class DashBoardFormController {
     public javafx.scene.control.TextArea TextArea;
     public TextField TextFeild;
     public VBox vbox;
+    public Label lblTime;
+    public Label lblDate;
+
 
     private FileChooser fileChooser;
     private File filePath;
@@ -36,11 +47,14 @@ public class DashBoardFormController {
     PrintWriter writer;
 
     public void initialize() throws IOException {
+        LoadDateAndTime();
+
+
         userName = LoginController.username;
 
         try {
-            socket = new Socket("localhost", 5001);
-            System.out.println("Socket is connected with server!");
+            socket = new Socket("localhost", 5000);
+            System.out.println("connected to the server!");
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
 
@@ -90,6 +104,21 @@ public class DashBoardFormController {
         }).start();
     }
 
+
+    private void LoadDateAndTime() {
+        //time date
+        lblDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+        Timeline clock=new Timeline(new KeyFrame(Duration.ZERO , e->{
+            LocalTime currentTime = LocalTime.now();
+            lblTime.setText(currentTime.getHour()+":"+currentTime.getMinute()+":"+currentTime.getSecond());
+        }
+
+        ),new KeyFrame(Duration.seconds(1))
+        );
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
+    }
     public void BackOnAction(ActionEvent actionEvent) throws IOException {
         Stage stage = (Stage)OneContex.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("../views/LoginForm.fxml"))));

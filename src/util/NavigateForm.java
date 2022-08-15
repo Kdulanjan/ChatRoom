@@ -14,13 +14,13 @@ public class NavigateForm {
     public static void  navigationForm(AnchorPane anchorPane, String url) throws IOException {
 
         anchorPane.getChildren().clear();
-        Parent parent = FXMLLoader.load(NavigateForm.class.getResource("../view/"+url+".fxml"));
+        Parent parent = FXMLLoader.load(NavigateForm.class.getResource("../views/LoginForm.fxml"));
         anchorPane.getChildren().add(parent);
     }
 
     public static void newUi(AnchorPane anchorPane, String url) throws IOException {
         Stage stage=new Stage();
-        stage.setScene(new Scene(FXMLLoader.load(NavigateForm.class.getResource("../view/"+url+".fxml"))));
+        stage.setScene(new Scene(FXMLLoader.load(NavigateForm.class.getResource("../views/DashBoardForm.fxml"))));
         stage.centerOnScreen();
         stage.centerOnScreen();
         stage.show();
